@@ -1,1 +1,362 @@
-
+[
+    {
+        "type": "enemy",
+        "name": "Slime",
+        "maxhp": 20,
+        "attack": 7,
+        "defence": 0,
+        "gold": 15,
+        "exp": 15,
+        "hitchance": 0.7
+    },
+    {
+        "type": "enemy",
+        "name": "Skeleton",
+        "maxhp": 30,
+        "attack": 10,
+        "defence": 2,
+        "gold": 20,
+        "exp": 25,
+        "hitchance": 0.7
+    },
+    {
+        "type": "enemy",
+        "name": "Zombie",
+        "maxhp": 25,
+        "attack": 10,
+        "defence": 4,
+        "gold": 20,
+        "exp": 30,
+        "hitchance": 0.65
+    },
+    {
+        "type": "enemy",
+        "name": "Iron Shell Crab",
+        "maxhp": 35,
+        "attack": 10,
+        "defence": 5,
+        "gold": 50,
+        "exp": 40,
+        "hitchance": 0.8
+    },
+    {
+        "type": "equipment",
+        "name": "Wooden Sword",
+        "rarity": -1,
+        "price": 10,
+        "slot": "weapon",
+        "attack": 1,
+        "hitchance": 0.7
+    },
+    {
+        "type": "equipment",
+        "name": "Cloth Bandana",
+        "rarity": -1,
+        "price": 10,
+        "slot": "head",
+        "defence": 0
+    },
+    {
+        "type": "equipment",
+        "name": "Plain Shirt",
+        "rarity": -1,
+        "price": 10,
+        "slot": "chest",
+        "defence": 0
+    },
+    {
+        "type": "equipment",
+        "name": "Simple Gloves",
+        "rarity": -1,
+        "price": 10,
+        "slot": "hands",
+        "defence": 0
+    },
+    {
+        "type": "equipment",
+        "name": "Plain Pants",
+        "rarity": -1,
+        "price": 10,
+        "slot": "legs",
+        "defence": 0
+    },
+    {
+        "type": "equipment",
+        "name": "Boots",
+        "rarity": -1,
+        "price": 10,
+        "slot": "feet",
+        "defence": 0
+    },
+    {
+        "type": "equipment",
+        "name": "Copper Sword",
+        "rarity": 0,
+        "price": 35,
+        "slot": "weapon",
+        "attack": 5,
+        "hitchance": 0.75
+    },
+    {
+        "type": "equipment",
+        "name": "Copper Axe",
+        "rarity": 0,
+        "price": 35,
+        "slot": "weapon",
+        "attack": 7,
+        "hitchance": 0.6
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Sword",
+        "rarity": 1,
+        "price": 70,
+        "slot": "weapon",
+        "attack": 10,
+        "hitchance": 0.75
+    },
+    {
+        "type": "equipment",
+        "name": "Iron Sword",
+        "rarity": 2,
+        "price": 150,
+        "slot": "weapon",
+        "attack": 15,
+        "hitchance": 0.75
+    },
+    {
+        "type": "equipment",
+        "name": "Steel Sword",
+        "rarity": 3,
+        "price": 300,
+        "slot": "weapon",
+        "attack": 20,
+        "hitchance": 0.85
+    },
+    {
+        "type": "equipment",
+        "name": "Leather Helmet",
+        "rarity": 0,
+        "price": 35,
+        "slot": "head",
+        "defence": 2
+    },
+    {
+        "type": "equipment",
+        "name": "Leather Chestguard",
+        "rarity": 0,
+        "price": 35,
+        "slot": "chest",
+        "defence": 2
+    },
+    {
+        "type": "equipment",
+        "name": "Leather Gloves",
+        "rarity": 0,
+        "price": 35,
+        "slot": "hands",
+        "defence": 2
+    },
+    {
+        "type": "equipment",
+        "name": "Leather Pants",
+        "rarity": 0,
+        "price": 35,
+        "slot": "legs",
+        "defence": 2
+    },
+    {
+        "type": "equipment",
+        "name": "Leather Boots",
+        "rarity": 0,
+        "price": 35,
+        "slot": "feet",
+        "defence": 2
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Plated Helmet",
+        "rarity": 1,
+        "price": 60,
+        "slot": "head",
+        "defence": 3
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Chestguard",
+        "rarity": 1,
+        "price": 60,
+        "slot": "chest",
+        "defence": 3
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Gauntlets",
+        "rarity": 1,
+        "price": 60,
+        "slot": "hands",
+        "defence": 3
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Plated Grieves",
+        "rarity": 1,
+        "price": 60,
+        "slot": "legs",
+        "defence": 3
+    },
+    {
+        "type": "equipment",
+        "name": "Bronze Plated Boots",
+        "rarity": 1,
+        "price": 60,
+        "slot": "feet",
+        "defence": 3
+    },
+    {
+        "type": "equipment",
+        "name": "Steel Axe",
+        "rarity": 3,
+        "price": 325,
+        "slot": "weapon",
+        "attack": 25,
+        "hitchance": 0.6
+    },
+    {
+        "type": "equipment",
+        "name": "Legendary Crystaline Blade",
+        "rarity": 5,
+        "price": 10000,
+        "slot": "weapon",
+        "attack": 100,
+        "hitchance": 1.0
+    },
+    {
+        "type": "equipment",
+        "name": "Legendary Crystaline Boots",
+        "rarity": 5,
+        "price": 10000,
+        "slot": "feet",
+        "defence": 100
+    },
+    {
+        "type": "equipment",
+        "name": "Iron Helmet",
+        "rarity": 2,
+        "price": 90,
+        "slot": "head",
+        "defence": 4
+    },
+    {
+        "type": "equipment",
+        "name": "Iron Chestguard",
+        "rarity": 2,
+        "price": 90,
+        "slot": "chest",
+        "defence": 4
+    },
+    {
+        "type": "spell_book",
+        "name": "Light Heal",
+        "rarity": 100,
+        "price": 300,
+        "spellslot": "level:1",
+        "target": "self",
+        "value": 20,
+        "manacost": 25
+    },
+    {
+        "type": "spell_book",
+        "name": "Light Fire",
+        "rarity": 100,
+        "price": 250,
+        "spellslot": "level:1",
+        "target": "enemy",
+        "value": 20,
+        "manacost": 15
+    },
+    {
+        "type": "spell_book",
+        "name": "Talk",
+        "rarity": 0,
+        "price": 0,
+        "spellslot": "level:1",
+        "target": "npc",
+        "value": "quest",
+        "manacost": 0
+    },
+    {
+        "type": "spell_book",
+        "name": "Concentrated Explosion",
+        "rarity": 10,
+        "price": 2500,
+        "spellslot": "level:4",
+        "target": "enemy",
+        "value": 100,
+        "manacost": 90
+    },
+    {
+        "type": "usable",
+        "name": "Small HP Potion",
+        "rarity": 0,
+        "price": 15,
+        "recovers": "health",
+        "recoverval": 25
+    },
+    {
+        "type": "usable",
+        "name": "Medium HP Potion",
+        "rarity": 2,
+        "price": 35,
+        "recovers": "health",
+        "recoverval": 75
+    },
+    {
+        "type": "usable",
+        "name": "Large HP Potion",
+        "rarity": 3,
+        "price": 65,
+        "recovers": "health",
+        "recoverval": 100
+    },
+    {
+        "type": "usable",
+        "name": "Full HP Potion",
+        "rarity": 5,
+        "price": 2000,
+        "recovers": "health",
+        "recoverval": 9999
+    },
+    {
+        "type": "usable",
+        "name": "Small MP Potion",
+        "rarity": 1,
+        "price": 35,
+        "recovers": "mana",
+        "recoverval": 25
+    },
+    {
+        "type": "usable",
+        "name": "Medium MP Potion",
+        "rarity": 3,
+        "price": 60,
+        "recovers": "mana",
+        "recoverval": 50
+    },
+    {
+        "type": "usable",
+        "name": "Large MP Potion",
+        "rarity": 4,
+        "price": 100,
+        "recovers": "mana",
+        "recoverval": 75
+    },
+    {
+        "type": "usable",
+        "name": "Full MP Potion",
+        "rarity": 5,
+        "price": 2000,
+        "recovers": "mana",
+        "recoverval": 9999
+    }
+]

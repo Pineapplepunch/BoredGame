@@ -1,0 +1,17 @@
+{
+	"name":"Tutorial Part 0, Movement",
+	"appearsin":[-5],
+	"entrance_pos":[3,2],
+	"exit_pos":[1,2],
+	"available_mobs":[""],
+	"floor":
+	[
+		["#","#","#","#","#"],
+		["#","s","!","s","#"],
+		["#","s","s","s","#"],
+		["#","s",".","s","#"],
+		["#","#","#","#","#"]
+	],
+	"background":"#000000",
+	"foreground":"#FFFFFF"
+}

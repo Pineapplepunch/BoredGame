@@ -1,0 +1,17 @@
+{
+	"name": "Tutorial Part 2, Chest",
+	"appearsin": [-3],
+	"entrance_pos": [3, 2],
+	"exit_pos": [1, 2],
+	"available_mobs": [],
+	"floor": 
+		[
+			["#", "#", "#", "#", "#"],
+			["#", "s", "!", "s", "#"],
+			["#", "s", "c", "s", "#"],
+			["#", "s", ".", "s", "#"],
+			["#", "#", "#", "#", "#"]
+		],
+	"background":"#000000",
+	"foreground":"#FFFFFF"
+}

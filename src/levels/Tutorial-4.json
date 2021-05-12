@@ -1,0 +1,17 @@
+{
+	"name": "Tutorial Part 4, False Wall",
+	"appearsin": [-1],
+	"entrance_pos": [3, 2],
+	"exit_pos": [1, 2],
+	"available_mobs": [],
+	"floor": 
+		[
+			["#", "#", "#", "#", "#"],
+			["#", "#", "!", "#", "#"],
+			["#", "#", "|", "#", "#"],
+			["#", "#", ".", "#", "#"],
+			["#", "#", "#", "#", "#"]
+		],
+	"background":"#000000",
+	"foreground":"#FFFFFF"
+}

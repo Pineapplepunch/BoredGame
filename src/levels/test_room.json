@@ -1,0 +1,17 @@
+{
+	"name":"test_room",
+	"appearsin":[0],
+	"entrance_pos":[3,1],
+	"exit_pos":[2,3],
+	"available_mobs":["Slime","Zombie","Skeleton"],
+	"floor":
+		[	
+			["#","#","#","#","#"],
+			["#","s","m","!","#"],
+			["#","c","s","?","#"],
+			["#",".","g","s","#"],
+			["#","#","#","#","#"]
+		],
+	"background":"#000000",
+	"foreground":"#FFFFFF"
+}

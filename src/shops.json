@@ -1,0 +1,32 @@
+[
+	{"floor":5,
+		"type":"shop",
+		"shopinventory":
+			{
+				"Small HP Potion":8,
+				"Medium HP Potion":2,
+				"Small MP Potion":2,
+				"Copper Sword":1,
+				"Leather Helmet":1,
+				"Leather Chestguard":1,
+				"Leather Gloves":1,
+				"Leather Pants":1,
+				"Leather Boots":1,
+				"Copper Axe":1,
+				"Light Heal":1
+			}
+	},
+	{"floor":15,
+		"type":"shop",
+		"shopinventory":
+			{
+				"Small HP Potion":6,
+				"Medium HP Potion":5,
+				"Iron Sword":1,
+				"Steel Sword":1
+			}
+		
+	}
+
+
+]

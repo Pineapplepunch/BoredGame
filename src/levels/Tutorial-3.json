@@ -1,0 +1,17 @@
+{
+	"name": "Tutorial Part 3, Monster",
+	"appearsin": [-2],
+	"entrance_pos": [3, 2],
+	"exit_pos": [1, 2],
+	"available_mobs": ["Slime"],
+	"floor": 
+		[
+			["#", "#", "#", "#", "#"],
+			["#", "s", "!", "s", "#"],
+			["#", "s", "m", "s", "#"],
+			["#", "s", ".", "s", "#"],
+			["#", "#", "#", "#", "#"]
+		],
+	"background":"#000000",
+	"foreground":"#FFFFFF"
+}
