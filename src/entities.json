@@ -228,7 +228,7 @@
         "rarity": 5,
         "price": 10000,
         "slot": "weapon",
-        "attack": 100,
+        "attack": 101,
         "hitchance": 1.0
     },
     {
