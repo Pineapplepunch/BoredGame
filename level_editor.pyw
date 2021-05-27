@@ -224,7 +224,10 @@ class Editor(tk.Frame):
     def init_grid(self):
         winwidth =  BASE_W_OFFSET
         winheight = (self.row_value.get()*BOX) + BASE_H_OFFSET
-        self.master.geometry(f'{winwidth}x{winheight}')
+        if os.name=='nt':
+            self.master.geometry(f'{winwidth}x{winheight}')
+        else:
+            self.master.geometry(f'{winwidth+190}x{winheight+20}')
         
         board_width=(self.col_value.get()*BOX)-1
         board_height=(self.row_value.get()*BOX)-1
@@ -307,8 +310,11 @@ class Editor(tk.Frame):
         
         winwidth = BASE_W_OFFSET if BASE_W_OFFSET > (self.col_value.get()*BOX)+43 else (self.col_value.get()*BOX)+43  
         winheight = (self.row_value.get()*BOX) + BASE_H_OFFSET+3
-        self.master.geometry(f'{winwidth}x{winheight}')
-        
+        if os.name=='nt':
+            self.master.geometry(f'{winwidth}x{winheight}')
+        else:
+            self.master.geometry(f'{winwidth+190}x{winheight+20}')
+            
     def on_square_clicked(self,event):
         self.coords['x'] = event.x//BOX
         self.coords['y'] = event.y//BOX
@@ -439,7 +445,7 @@ def OpenNew():
     root = tk.Tk()
     root.eval("tk::PlaceWindow %s center" %root.winfo_pathname(root.winfo_id()))
     root.geometry('250x250')
-    root.resizable(0,0)
+    #root.resizable(0,0)
     root.title("")
     app =Editor(root)
     app.mainloop()

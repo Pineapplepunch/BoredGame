@@ -13,8 +13,8 @@ from functools import partial
 
 try:
     from PIL import Image, ImageTk
-except:
-    print("Could not load Images")
+except Exception as e:
+    print(f"Could not Load images\nError: {e}")
 
 # from PIL import Image,ImageTk
 from tkinter import filedialog
@@ -900,7 +900,10 @@ class Portrait(tk.Frame):  # (parent)
         # self.player_obj=player_obj
         # self.main_window=main_window
         try:
-            self.bg_img = ImageTk.PhotoImage(Image.open('./src/bg1.gif').resize((420, 250)))
+            if os.path.exists('./src/custom.gif'):
+                self.bg_img = ImageTk.PhotoImage(Image.open('./src/custom.gif').resize((420, 250)))
+            else:
+                self.bg_img = ImageTk.PhotoImage(Image.open('./src/basic.gif').resize((420,250)))
             self.canvas.create_image(0, 0, anchor='nw', image=self.bg_img)
         except Exception as e:
             print(e)
@@ -912,8 +915,8 @@ class Portrait(tk.Frame):  # (parent)
         self.item_hover_text()
         self.spell_hover_text()
 
-        self.s = ImageTk.PhotoImage(Image.open('b.png'))
-        self.canvas.create_image(81, 151, anchor='nw', image=self.s)
+        #self.s = ImageTk.PhotoImage(Image.open('b.png'))
+        #self.canvas.create_image(81, 151, anchor='nw', image=self.s)
 
         # (x,y,x1,x2)
 
