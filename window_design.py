@@ -97,6 +97,13 @@ class tester(tk.Frame):
         self.master.bind('<Down>', lambda e: self.gameboard.button_handle('s'))
 
 
+##Use for mass taging of items
+def retag(tag,*args):
+    for widget in args:
+            widget.bindtags((tag,)+widget.bindtags())
+#retag("taggroup",self.element1,self.element2)
+#tk.bind_class('taggroup','<Enter>',lambda: self.function())
+
 ## Custom UI Objects
 class HorizontalMeterBar(tk.Frame):  # (parent,title,[width,height,labelpos,clickable)
 
@@ -451,13 +458,15 @@ class Character_Creation(tk.Frame):  # (parent)#implement Load character
 
     def ask_file(self):
         filename = None
-        filename = filedialog.askopenfilename(initialdir='C:/Users',
-                                              filetypes=[('Images', ('*.jpg', '*.png', '*.gif'))])
+        if os.name=='nt':
+            filename = filedialog.askopenfilename(initialdir='C:/Users',filetypes=[('Images', ('*.jpg', '*.png', '*.gif'))])
+        else:
+            filename = filedialog.askopenfilename(initialdir='/home/'+os.uname()[1]+'/Pictures',filetypes=[('Images',('*.jpg','*.png','*.gif'))])
         if filename != '':
             shutil.copy2(filename, os.getcwd())
-            if os.path.isfile('./src/bg1.gif'):
-                os.remove('./src/bg1.gif')
-            os.rename(filename.split('/')[-1], "./src/bg1.gif")
+            if os.path.isfile('./src/custom.gif'):
+                os.remove('./src/custom.gif')
+            os.rename(filename.split('/')[-1], "./src/custom.gif")
             self.filename.config(text=filename.split('/')[-1], relief='raised')
 
     def confirm(self):  # remember to unpack this window
