@@ -400,12 +400,20 @@ class Character_Creation(tk.Frame):  # (parent)#implement Load character
     def __init__(self, master, **args):
         tk.Frame.__init__(self, master, **args)
         self.master = master
-
+        self.pack(fill='both',expand=1)
         # self.creation_menu=None
         self.player = None
         self.menu()
 
     def menu(self):
+        self.menu_canvas = tk.Canvas(self)
+        self.menu_canvas.pack()
+        self.newgame_button = HoverButton(self,text="Start a New Game",activebackground='blue',activeforeground='black')
+        self.loadgame_button = HoverButton(self,text="Load an Old Game",activebackground='blue',activeforeground='black')
+        self.newgame_button.pack()#grid(column=0,row=0,sticky='w')
+        self.loadgame_button.pack()#grid(column=1,row=0,sticky='w')
+        
+    def new_char_menu(self):
         tk.Label(self, text="Enter a Name").grid(column=0, row=0)
         self.name_entry = tk.Entry(self)
         self.name_entry.insert(10, 'Johnathy')
@@ -1276,15 +1284,18 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
             color = colorchooser.askcolor(title='Background Color')
             self.master.gameboard.board_fill = color[1]
             self.master.gameboard.update_colors()
-
+        
         tk.Button(self.optionsmenu, text='choose BG color', command=get_bg_color).pack()
         tk.Button(self.optionsmenu, text='choose FG color', command=get_fg_color).pack()
-        tk.Button(self.optionsmenu, text='Save Game').pack()
+        tk.Button(self.optionsmenu, text='Save Game', command = lambda:self.save_game_state()).pack()
 
         self.helpmenu = ttk.Frame(self.charinfo)
         tk.Label(self.helpmenu, text='Key', font=self.master.gamefont).pack()
         keystring = f'''{CHAR_DICT['*']} = Player\n{CHAR_DICT['#']} = Wall\n{CHAR_DICT['d']} = Door\n{CHAR_DICT['m']} = Monster\n{CHAR_DICT['g']} = Gold\n{CHAR_DICT['c']} = Chest\n{CHAR_DICT['.']} = Entrance\n{CHAR_DICT['!']} = Exit'''
         tk.Label(self.helpmenu, text=keystring, font=self.master.gamefont, justify=tk.LEFT).pack()
+
+    def save_game_state(self):
+        pass
 
     def create_map_tab(self):
         self.mapmenu = ttk.Frame(self.charinfo)

@@ -1293,11 +1293,11 @@ if __name__ == '__main__':
     floor_arr = {}
     for x in range(-6, 1):
         floor_arr[f'floor{x + 1}'] = generate_next_level(x, p)
-    save_game(floor_arr)
+    #save_game(floor_arr)
 
     arr = load_game(p.name + '_sav.json')
     print(arr)
-
+    
     '''
     p.exp+=100
     p.check_levelup()
