@@ -408,12 +408,15 @@ class Character_Creation(tk.Frame):  # (parent)#implement Load character
     def menu(self):
         self.menu_canvas = tk.Canvas(self)
         self.menu_canvas.pack()
-        self.newgame_button = HoverButton(self,text="Start a New Game",activebackground='blue',activeforeground='black')
-        self.loadgame_button = HoverButton(self,text="Load an Old Game",activebackground='blue',activeforeground='black')
+        self.newgame_button = HoverButton(self,text="Start a New Game",activebackground='blue',activeforeground='black',command=self.new_char_menu)
+        self.loadgame_button = HoverButton(self,text="Load an Old Game",activebackground='blue',activeforeground='black',command=self.load_char_menu)
         self.newgame_button.pack()#grid(column=0,row=0,sticky='w')
         self.loadgame_button.pack()#grid(column=1,row=0,sticky='w')
         
     def new_char_menu(self):
+        self.menu_canvas.pack_forget()
+        self.newgame_button.pack_forget()
+        self.loadgame_button.pack_forget()
         tk.Label(self, text="Enter a Name").grid(column=0, row=0)
         self.name_entry = tk.Entry(self)
         self.name_entry.insert(10, 'Johnathy')
@@ -433,6 +436,16 @@ class Character_Creation(tk.Frame):  # (parent)#implement Load character
         confirm = tk.Button(self, text='Confirm', command=self.confirm)
         confirm.grid(column=0, row=10, columnspan=2, sticky='we')
 
+    def load_char_menu(self):
+        filename=None
+        if os.name=='nt':
+            filename = filedialog.askopenfilename(filetypes=[('Saves', ('*.json','*.sav'))])
+        else:
+            filename = filedialog.askopenfilename(filetypes=[('Saves', ('*.json', '*.sav'))])
+        gamesav=objects.load_game(filename) 
+        print([*gamesav.values()][-1].player_obj)
+
+        
     def menu_child_window(self):
         # self.master.master.iconify()
 
@@ -1465,6 +1478,8 @@ def center(win):
 
 
 if __name__ == "__main__":
+    if not os.path.isdir('saves'):
+        os.makedirs('saves') 
     root = tk.Tk()
     root.eval("tk::PlaceWindow %s center" % root.winfo_pathname(root.winfo_id()))
     # root.geometry('250x250')
