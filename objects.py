@@ -736,7 +736,7 @@ class Board():  # (floorarr,player,mob_list,entrance_pos,exit_pos,floor_index)
         return (f'Floor: {self.floor_index},\n{self.mob_list},\n{self.player_pos},\n{self.exit_pos},\n{self.events}')
 
 
-class BoardEvent():  # player,type,[shop|chest|monster|trap]
+class BoardEvent():  # player,type,[shop|chest|monster|trap], completed
     def __init__(self, player, type, shop=None, chest=None, monster=None, trap=None, completed=[False, "", "event"]):
         self.player = player
         self.type = type
@@ -1001,8 +1001,7 @@ def load_json():
             for item, quantity in shop['shopinventory'].items():
                 items.extend([i_dict[item] for x in range(quantity)])
             s_dict['floor' + str(shop['floor'])] = Shop(None, items)
-    files = os.listdir('./src/levels')
-    for file in files:
+    for file in os.listdir('./src/levels'):
         with open(f'./src/levels/{file}', 'r') as f:
             f_arr.append(json.load(f))
 
@@ -1012,7 +1011,6 @@ def load_json():
 MONSTERS_DICT, ITEMS_DICT, SHOP_DICT, FLOORS_LIST = load_json()
 TRAPS = {'Flame': 10, 'Arrow': 15, 'Pitfall': 25, 'Boulder': 50}
 
-
 ### Generate new floor
 def randomize_floor(currindex):
     rand = randint(0, len(FLOORS_LIST) - 1)
@@ -1020,14 +1018,14 @@ def randomize_floor(currindex):
         rand = randint(0, len(FLOORS_LIST) - 1)
     return rand
 
-
+#Generate the next floor
 def generate_next_level(current_index, player):
     floor = FLOORS_LIST[randomize_floor(current_index + 1)]
     return copy.deepcopy(
         Board(floor['floor'], player, floor['available_mobs'], floor['entrance_pos'], floor['exit_pos'],
               current_index + 1, floor['name']))
 
-
+#Generate a shop every 10 floors starting at floor 5
 def generate_shop(current_index, player):
     for level in FLOORS_LIST:
         if level['name'] == 'Shop':
@@ -1036,7 +1034,7 @@ def generate_shop(current_index, player):
         Board(floor['floor'], player, floor['available_mobs'], floor['entrance_pos'], floor['exit_pos'],
               current_index + 1, floor['name']))
 
-
+#Generate a bonus every 10 floors starting at floor 10
 def generate_bonus(current_index, player):
     for level in FLOORS_LIST:
         if level['name'] == 'Bonus Room':
@@ -1045,7 +1043,6 @@ def generate_bonus(current_index, player):
         Board(floor['floor'], player, floor['available_mobs'], floor['entrance_pos'], floor['exit_pos'],
               current_index + 1, floor['name']))
 
-
 ### Save Game
 def save_game(floor_dict: dict):
     save = '{\n"player":\n' + json.dumps(list(floor_dict.values())[-1].player_obj, cls=complexEncoder, indent=4)
@@ -1053,8 +1050,7 @@ def save_game(floor_dict: dict):
     with open(f'{list(floor_dict.values())[-1].player_obj.name}_sav.json', 'w') as savefile:
         savefile.writelines(save)
 
-
-### Load Game
+#Load Game test method
 def load_char_from_dict(object: dict):
     p = Player(object['name'], object['maxhp'], object['maxmp'], object['attack'], object['defence'], object['gold'],
                object['exp'], object['level'], object['floor'], object['hitchance'])
@@ -1074,7 +1070,7 @@ def load_char_from_dict(object: dict):
         p.effects.append(e)
     return p
 
-
+### Load Game
 def load_game(filename):
     floor_arr = {}
     with open(filename, 'r') as loadfile:
@@ -1196,25 +1192,6 @@ class combat():  ### uses DOT and HOT, Implement in window_design.py
 
             return self.player.use_item(self.player.inventory[command])
 
-
-'''
-def combat(e1,e2):
-    turn=1
-    combatlog=[]
-    while e1.is_dead()==False or e2.is_dead()==False:
-        combatlog.append(e1.att_target(e2))
-        if e2.is_dead()==True:break
-        combatlog.append(e2.att_target(e1))
-        if e1.is_dead()==True:break
-        turn+=1
-    if e2.is_dead():
-        combatlog.append(f'Combat Completed in {turn} turns {e1.name} Wins!\n{e1.name} gained {e2.exp}EXP and {e2.gold} Gold\n')
-    if e1.is_dead():
-        combatlog.append(f'Combat Completed in {turn} turns {e1.name} Loses!\nGame Over\n')
-    return combatlog
- '''
-
-
 def shop_commands(s):
     command = input('Do you want to (b)uy or (s)ell?\n')
 
@@ -1279,26 +1256,27 @@ if __name__ == '__main__':
     e = Effect(4, 'poison', 'damage', 5)
     e2 = Effect(2, 'fire', 'damage', 10)
     e3 = Effect(3, 'polish', 'heal', 10)
-    # p.get_status_effect(e)
-    '''
+
+### Combat Testing
     com = combat(copy.deepcopy(MONSTERS_DICT['Slime']),p)
     com.determine_turn_order()
     res = com.ask_move()
-
     while res ==False:
         res = com.ask_move() 
+        print(com.combat_log)
     for e in com.combat_log:
         print(e)
-        '''
+
+'''### Generate Floors, Create Save, Load Save
     floor_arr = {}
     for x in range(-6, 1):
         floor_arr[f'floor{x + 1}'] = generate_next_level(x, p)
-    #save_game(floor_arr)
+    save_game(floor_arr)
 
     arr = load_game(p.name + '_sav.json')
     print(arr)
-    
-    '''
+'''
+''' Spell usage testing
     p.exp+=100
     p.check_levelup()
 
@@ -1322,5 +1300,6 @@ if __name__ == '__main__':
     print(p.currhp)
     print(p.cast_spell('Light Heal'))
     print(p.currhp)
-    print(p.currmp)'''
+    print(p.currmp)
+'''
 

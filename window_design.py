@@ -383,7 +383,7 @@ class Base_Window(tk.Frame):
         self.master.bind('s', lambda e: self.button_handle('s'))
         self.master.bind('d', lambda e: self.button_handle('d'))
         self.master.bind('<Left>', lambda e: self.button_handle('a'))
-        self.master.bind('<Right>', lambda e: selfbutton_handle('d'))
+        self.master.bind('<Right>', lambda e: self.button_handle('d'))
         self.master.bind('<Up>', lambda e: self.button_handle('w'))
         self.master.bind('<Down>', lambda e: self.button_handle('s'))
 
