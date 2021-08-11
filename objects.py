@@ -710,7 +710,7 @@ class Board():  # (floorarr,player,mob_list,entrance_pos,exit_pos,floor_index)
     def inventory_commands(self):
         def conf_callback(item_index):
             item = self.player_obj.inventory[item_index]
-            f = 'Use' if isinstance(item, objects.Potion) else 'Equip'
+            f = 'Use' if isinstance(item, Potion) else 'Equip'
             f += f' {item.name}? (y/n)'
             command = input(f)
             if command.lower().startswith('y'):
@@ -791,7 +791,7 @@ class BoardEvent():  # player,type,[shop|chest|monster|trap], completed
                 return False
             else:
                 print("Answer (y/n)")
-                buy_callback(int_index)
+                buy_callback(item_index)
 
         def sell_callback(item_index):
             f = f'Sell your {self.shop.player.inventory[item_index]}(y/n)?\nYou will only get 90% of its price.\n'
@@ -802,7 +802,7 @@ class BoardEvent():  # player,type,[shop|chest|monster|trap], completed
                 return False
             else:
                 print("Answer (y/n)")
-                sell_callback(int_index)
+                sell_callback(item_index)
 
         if command.startswith('b'):
             print(self.shop.list_shop_inventory())
@@ -1204,7 +1204,7 @@ def shop_commands(s):
             return False
         else:
             print("Answer (y/n)")
-            buy_callback(int_index)
+            buy_callback(item_index)
 
     def sell_callback(item_index):
         f = f'Sell your {s.player.inventory[item_index]}(y/n)?\nYou will only get 90% of its price.\n'
@@ -1215,7 +1215,7 @@ def shop_commands(s):
             return False
         else:
             print("Answer (y/n)")
-            sell_callback(int_index)
+            sell_callback(item_index)
 
     if command.startswith('b'):
         print(s.list_shop_inventory())

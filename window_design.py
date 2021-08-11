@@ -46,9 +46,9 @@ p = objects.Player('J', _maxhp=100, _maxmana=100)
 # s=objects.Shop(p,["Small HP Potion","Medium HP Potion","Small MP Potion"])
 m = objects.Character('test mob', 10, 6, 3, 10, 10, 0.5)
 com = objects.BoardEvent(player=p, type=type, monster=m)
-# with open ('test.json','r') as file:
+#with open ('test.json','r') as file:
 #    floor = json.load(file)
-# bo = objects.Board(floor['floor'],p,floor['available_mobs'],floor['entrance_pos'],floor['exit_pos'],1,"fugs")
+#bo = objects.Board(floor['floor'],p,floor['available_mobs'],floor['entrance_pos'],floor['exit_pos'],1,"fugs")
 # bo.show_floor_fancy()
 test = True
 
@@ -61,7 +61,7 @@ class tester(tk.Frame):
         self.pack(fill=tk.BOTH, expand=True)
         self.player_obj = p
         self.gamefont = font.Font(family='Consolas', size=12)
-        self.current_floor = bo
+        self.current_floor = None
         self.gameboard = Visual_Board(self, color='#111111')
         self.charinfo = CharInfo(self)
         self.gameboard.pack(side=tk.LEFT)
@@ -115,7 +115,7 @@ class HorizontalMeterBar(tk.Frame):  # (parent,title,[width,height,labelpos,clic
         self.max = max
         self.current = current
         self.type = type
-        self.canvas = tk.Canvas(self, width=self.cwidth, height=self.cheight)
+        self.canvas = tk.Canvas(self, width=self.cwidth, height=self.cheight,background="black",bd=0,highlightthickness=0)
 
         self.canvas.grid(row=0, column=0)
         self.label_id = self.canvas.create_text(self.cwidth / 2, (self.cheight / 2) + 2,
@@ -131,7 +131,7 @@ class HorizontalMeterBar(tk.Frame):  # (parent,title,[width,height,labelpos,clic
                 self.canvas.create_rectangle(startx, 5, endx, self.cheight, fill=self.get_color(self.current), width=0))
             startx += 1
             endx += 1
-        self.canvas.create_rectangle(2, 5, self.cwidth, self.cheight)
+        self.canvas.create_rectangle(1, 5, self.cwidth, self.cheight,outline="white")
         self.canvas.tag_raise(self.label_id)
         self.set_value(self.current)
 
@@ -241,11 +241,119 @@ class SortSearchTreeview(ttk.Treeview):  # (heading(sort_by='name|num'))
                 if res:
                     return True
 
+class ReorderNotebook(ttk.Notebook):
+    __initialized = False
+    def __init__(self,*args,**kwargs):
+        if not self.__initialized:
+            #self.__initialize_custom_style()
+            ReorderNotebook.__initialized=True
+    
+        #kwargs['style'] = "CustomNotebook"
+        ttk.Notebook.__init__(self,*args,**kwargs)
+        self._active=None
+        #self.bind("<ButtonPress-1>", self.on_close_press, True)
+        #self.bind("<ButtonRelease-1>", self.on_close_release)
+        self.bind("<ButtonPress-1>", self.onClick)
+        self.bind("<ButtonRelease-1>", self.onRelease)
+        
+    def on_close_release(self, event):
+        """Called when the button is released"""
+        if not self.instate(['pressed']):
+            return
+
+        element =  self.identify(event.x, event.y)
+        if "close" not in element:
+            # user moved the mouse off of the close button
+            return
+
+        index = self.index("@%d,%d" % (event.x, event.y))
+
+        if self._active == index:
+            self.forget(index)
+            self.event_generate("<<NotebookTabClosed>>")
+
+        self.state(["!pressed"])
+        self._active = None
+    
+    def on_close_press(self, event):
+        """Called when the button is pressed over the close button"""
+
+        element = self.identify(event.x, event.y)
+
+        if "close" in element:
+            index = self.index("@%d,%d" % (event.x, event.y))
+            self.state(['pressed'])
+            self._active = index
+            return "break"
+    
+    def __initialize_custom_style(self):
+        style = ttk.Style()
+        self.images = (
+            tk.PhotoImage("img_close", data='''
+                R0lGODlhCAAIAMIBAAAAADs7O4+Pj9nZ2Ts7Ozs7Ozs7Ozs7OyH+EUNyZWF0ZWQg
+                d2l0aCBHSU1QACH5BAEKAAQALAAAAAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU
+                5kEJADs=
+                '''),
+            tk.PhotoImage("img_closeactive", data='''
+                R0lGODlhCAAIAMIEAAAAAP/SAP/bNNnZ2cbGxsbGxsbGxsbGxiH5BAEKAAQALAAA
+                AAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU5kEJADs=
+                '''),
+            tk.PhotoImage("img_closepressed", data='''
+                R0lGODlhCAAIAMIEAAAAAOUqKv9mZtnZ2Ts7Ozs7Ozs7Ozs7OyH+EUNyZWF0ZWQg
+                d2l0aCBHSU1QACH5BAEKAAQALAAAAAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU
+                5kEJADs=
+            '''),
+            tk.PhotoImage("drag_and_drop",data='''
+            iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARn
+            QU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAlSURBVChTY2TAAf4DAYhm
+            AvMoAShWwIxlBAIqWoHNWBKsYGAAAKPHF/6OXC5OAAAAAElFTkSuQmCC
+            ''')
+        )
+
+        style.element_create("close", "image", "img_close",
+                            ("active", "pressed", "!disabled", "img_closepressed"),
+                            ("active", "!disabled", "img_closeactive"), border=8, sticky='')
+        style.layout("CustomNotebook", [("CustomNotebook.client", {"sticky": "nswe"})])
+        style.layout("CustomNotebook.Tab", [
+            ("CustomNotebook.tab", {
+                "sticky": "nswe",
+                "children": [
+                    ("CustomNotebook.padding", {
+                        "side": "top",
+                        "sticky": "nswe",
+                        "children": [
+                            ("CustomNotebook.focus", {
+                                "side": "top",
+                                "sticky": "nswe",
+                                "children": [
+                                    ("CustomNotebook.label", {"side": "left", "sticky": ''}),
+                                    ("CustomNotebook.close", {"side": "left", "sticky": ''}),
+                                ]
+                        })
+                    ]
+                })
+            ]
+        })
+        ])
+        print(style.layout("CustomNotebook"))
+    
+    def onClick(self,event):
+        self.src_index = self.tk.call(self._w,"identify",'tab',event.x,event.y)
+        
+    def onRelease(self,event):
+        if self.src_index!=None:
+            dst_index = self.tk.call(self._w,"identify",'tab',event.x,event.y)
+            if dst_index!=None:
+                try:
+                    self.insert(dst_index,self.tabs()[self.src_index])
+                except:
+                    pass
+     
 
 ##
-class Base_Window(tk.Frame):
+class Base_Window(ttk.Frame):
     def __init__(self, master=None):
-        tk.Frame.__init__(self, master)
+        ttk.Frame.__init__(self, master)
         self.master = master
         self.master.geometry('525x525')  # half is 525,270
         screen_width = self.master.winfo_screenwidth()
@@ -258,6 +366,130 @@ class Base_Window(tk.Frame):
         self.player_obj = None
         self.current_floor = None
         self.floors_arr = {}
+        self.style = ttk.Style()
+        self.style.theme_create("CustomDark",parent='default',settings={
+            "Custom.TNotebook":{
+                "configure":{
+                    "tabmargins":[0,0,0,0],
+                    "borderwidth":0,
+                    "font":("Consolas",10)
+                }
+            },
+            "Custom.TNotebook.Tab":{
+                "configure":{
+                    "padding":0,
+                    "background":"#444444",
+                    "foreground":"white",
+                    "focuscolor":"black",
+                    "relief":"flat",
+                    "font":("Consolas",10)
+                },
+                "map":{
+                    "background":[("selected","black")],
+                    "foreground":[("selected","white")],
+                    "expand":[("selected",[1,1,1,0])],
+                }
+            },
+            "Custom.TFrame":{
+                "configure":{
+                    "background":"black",
+                    "foreground":"white",
+                    "bordercolor":"white",
+                    "font":self.gamefont,
+                    "padding":0,
+                    "margin":[0,0,0,0],
+                }
+            },
+            "Custom.Treeview":{
+                "configure":{
+                    "background":"black",
+                    "fieldbackground":"black",
+                    "foreground":"white",
+                    "font":self.gamefont,
+                    "margin":[0,0,0,0],
+                    "padding":0,
+                    #"rowheight":25,
+                },
+                "map":{
+                    "background":[("selected","#666666")],
+                    "foreground":[("selected","white")],
+                }
+            },
+            "Custom.Treeview.Heading":{
+                "configure":{
+                    "background":"#000000",
+                    "foreground":"#FFFFFF",
+                    "relief":"flat",
+                },
+                "map":{
+                    "background":[("pressed","red"),("active",'#444444')],
+                    "relief":[("pressed","sunken")]
+                }
+            },
+            "Custom.Treeview.item":{
+                "configure":{
+                    "foreground":"white",
+                    "focuscolor":"black",
+                }
+            },
+            "Custom.TLabel":{
+                "configure":{
+                    "background":"black",
+                    "foreground":"white",
+                    "font":self.gamefont,
+                }
+            },
+            "Dark.TButton":{
+                "configure":{
+                    "background":"#444444",
+                    "foreground":"white",
+                    "focuscolor":"#444444",
+                    "darkcolor":"white",
+                    "lightcolor":"#333333",
+                    "relief":"raised",
+                    "font":self.gamefont
+                },
+                "map":{
+                    "background":[("active","#666666")],
+                    "focuscolor":[("active","#666666")],
+                    "relief":[('pressed','!disabled','sunken')],
+                },
+            },
+            "Alert.TButton":{
+                "configure":{
+                    "background":"#444444",
+                    "foreground":"white",
+                    "focuscolor":"#444444",
+                    "lightcolor":"white",
+                    "darkcolor":"#333333",
+                    "relief":"raised",
+                    "font":self.gamefont
+                },
+                "map":{
+                    "background":[("active","#FF0000")],
+                    "focuscolor":[("active","#FF0000")],
+                    "relief":[('pressed','!disabled','sunken')],
+                },
+            },
+            "Standard.TButton":{
+                "configure":{
+                    "background":"#444444",
+                    "foreground":"white",
+                    "focuscolor":"#444444",
+                    "lightcolor":"white",
+                    "darkcolor":"#333333",
+                    "relief":"raised",
+                    "font":self.gamefont
+                },
+                "map":{
+                    "background":[("active","#00FF00")],
+                    "foreground":[("active","#000000")],
+                    "focuscolor":[("active","#00FF00")],
+                    "relief":[('pressed','!disabled','sunken')],
+                }
+            },   
+        })
+        self.style.theme_use("CustomDark")
         self.cc = Character_Creation(self)
         self.cc.pack()
 
@@ -390,7 +622,7 @@ class Base_Window(tk.Frame):
     ##Unused
     def load_levels(self):  # needs fixing, uses existing object need a new copy per use of that floor | Use dict maybe?
         # self.floors_arr={}
-        self.floors_arr = board.generate_levels(1, 10, self.player_obj)
+        self.floors_arr = None#board.generate_levels(1, 10, self.player_obj)
         self.current_floor = self.floors_arr['floor1']
 
         self.key_bind_set()
@@ -1165,30 +1397,32 @@ class ToolTip():
             tw.destroy()
 
 
-class CharInfo(tk.Frame):  # Incomplete 300x700
+class CharInfo(ttk.Frame):  # Incomplete 300x700
     def __init__(self, master, height=500, width=420, **args):
-        tk.Frame.__init__(self, master, **args)
+        ttk.Frame.__init__(self, master, **args)
         self.master = master
-
-        self.charInfoFrame = tk.Frame(self, height=height // 2, width=420)
+        self.reorder_img=tk.PhotoImage("Reorder",data='''
+            iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARn
+            QU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAfSURBVChTYwCB/1AA5gAB
+            lAvmM4FFKAZQEwepFQwMAMHdL9dr8a1oAAAAAElFTkSuQmCC
+        ''')
+        self.charInfoFrame = ttk.Frame(self, height=height // 2, width=420,style="Custom.TFrame")
         self.charInfoFrame.pack(side=tk.TOP)
 
-        self.msgLogFrame = tk.Frame(self, height=height // 2, width=420)
+        self.msgLogFrame = ttk.Frame(self, height=height // 2, width=420,style="Custom.TFrame")
         self.msgLogFrame.pack(side=tk.BOTTOM)
 
-        self.style = ttk.Style()
-        self.charinfo = ttk.Notebook(self.charInfoFrame, height=height // 2, width=420)
-        self.style.configure("Notebook", font=self.master.gamefont)
-
+        self.charinfo = ReorderNotebook(self.charInfoFrame, height=height // 2, width=420,style="Custom.TNotebook")
+        
         self.insert_tabs()
         self.charinfo.pack()
 
-        self.messages = tk.Text(self.msgLogFrame, height=15, width=47, exportselection=0, font=self.master.gamefont)
+        self.messages = tk.Text(self.msgLogFrame, height=15, width=47, exportselection=0, font=self.master.gamefont,bg="black",fg="white",insertbackground='white')
         self.messages.insert('end-1c', 'Game Started\n')
         self.messages.bind("<Key>", lambda e: "break")
         self.messages.bind("<Button-1>", lambda e: "break")
         self.messages.bind("<<Modified>>", lambda e: self.scroll_messages(e))
-        self.messages.pack()
+        self.messages.pack(fill=tk.BOTH,expand=1)
 
     def scroll_messages(self, event):
         self.messages.see(tk.END)
@@ -1196,48 +1430,48 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
 
     def insert_tabs(self):
         self.create_stats_tab()
-        self.charinfo.add(self.charname, text='Character')
+        self.charinfo.add(self.charname, text='Character',image=self.reorder_img,compound=tk.RIGHT)
         self.create_equipment_tab()
-        self.charinfo.add(self.equipment, text='Equipment')
+        self.charinfo.add(self.equipment, text='Equipment',image=self.reorder_img,compound=tk.RIGHT)
         self.create_inventory_tab()
-        self.charinfo.add(self.inventoryFrame, text='Inventory')
+        self.charinfo.add(self.inventoryFrame, text='Inventory',image=self.reorder_img,compound=tk.RIGHT)
         self.create_spell_tab()
-        self.charinfo.add(self.spellinventoryFrame, text="Spells")
+        self.charinfo.add(self.spellinventoryFrame, text="Spells",image=self.reorder_img,compound=tk.RIGHT)
         self.create_options_tab()
-        self.charinfo.add(self.helpmenu, text='Help')
-        self.charinfo.add(self.optionsmenu, text="Main Menu")
+        self.charinfo.add(self.helpmenu, text='Help',image=self.reorder_img,compound=tk.RIGHT)
+        self.charinfo.add(self.optionsmenu, text="Main Menu",image=self.reorder_img,compound=tk.RIGHT)
         self.create_map_tab()
-        self.charinfo.add(self.mapmenu, text="Floors Explored")
+        self.charinfo.add(self.mapmenu, text="Floors Explored",image=self.reorder_img,compound=tk.RIGHT)
 
     def create_stats_tab(self):
         # create child frame
-        self.charname = ttk.Frame(self.charinfo)
+        self.charname = ttk.Frame(self.charinfo,style="Custom.TFrame")
         # add to child frame
         for i, stat in enumerate(('Name', 'Level', 'Health', 'Mana', 'Attack', 'Defence', 'Experience', 'Gold')):
-            tk.Label(self.charname, text=stat + ':', font=self.master.gamefont).grid(row=i, column=0, sticky='e')
+            ttk.Label(self.charname, text=stat + ':',style="Custom.TLabel").grid(row=i, column=0, sticky='e')
         self.levelvar = tk.StringVar()
         self.attackvar = tk.StringVar()
         self.defencevar = tk.StringVar()
         self.goldvar = tk.StringVar()
-        self.nameLabel = tk.Label(self.charname, text=self.master.player_obj.name, font=self.master.gamefont)
+        self.nameLabel = ttk.Label(self.charname, text=self.master.player_obj.name,style="Custom.TLabel")
         self.nameLabel.grid(row=0, column=1, sticky='w')
-        self.levelLabel = tk.Label(self.charname, textvariable=self.levelvar, font=self.master.gamefont)
+        self.levelLabel = ttk.Label(self.charname, textvariable=self.levelvar,style="Custom.TLabel")
         self.levelLabel.grid(row=1, column=1, sticky='w')
         self.healthLabel = HorizontalMeterBar(self.charname, self.master.player_obj.currhp,
-                                              self.master.player_obj.maxhp, 'hp', cheight=25, font=self.master.gamefont)
+                                              self.master.player_obj.maxhp, 'hp', cheight=25, font=self.master.gamefont,background="black")
         self.healthLabel.grid(row=2, column=1, sticky='w')
         self.manaLabel = HorizontalMeterBar(self.charname, self.master.player_obj.currmp, self.master.player_obj.maxmp,
-                                            'mp', cheight=25, font=self.master.gamefont)
+                                            'mp', cheight=25, font=self.master.gamefont,background="black")
         self.manaLabel.grid(row=3, column=1, sticky='w')
-        self.attackLabel = tk.Label(self.charname, textvar=self.attackvar, font=self.master.gamefont)
+        self.attackLabel = ttk.Label(self.charname, textvar=self.attackvar,style="Custom.TLabel")
         self.attackLabel.grid(row=4, column=1, sticky='w')
-        self.defenceLabel = tk.Label(self.charname, textvar=self.defencevar, font=self.master.gamefont)
+        self.defenceLabel = ttk.Label(self.charname, textvar=self.defencevar,style="Custom.TLabel")
         self.defenceLabel.grid(row=5, column=1, sticky='w')
         self.expLabel = HorizontalMeterBar(self.charname, self.master.player_obj.exp,
                                            100 * self.master.player_obj.level, 'exp', cheight=25,
                                            font=self.master.gamefont)
         self.expLabel.grid(row=6, column=1, sticky='w')
-        self.goldLabel = tk.Label(self.charname, textvar=self.goldvar, font=self.master.gamefont)
+        self.goldLabel = ttk.Label(self.charname, textvar=self.goldvar,style="Custom.TLabel")
         self.goldLabel.grid(row=7, column=1, sticky='w')
         self.stats_updated()
 
@@ -1247,8 +1481,8 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
         self.portrait.pack()
 
     def create_inventory_tab(self):
-        self.inventoryFrame = ttk.Frame(self.charinfo)
-        self.inventory = SortSearchTreeview(self.inventoryFrame, selectmode='browse')
+        self.inventoryFrame = ttk.Frame(self.charinfo,style="Custom.TFrame")
+        self.inventory = SortSearchTreeview(self.inventoryFrame, selectmode='browse',style="Custom.Treeview")
         self.inventory['columns'] = ('Attack', 'Defense', 'Health')
         self.inventory.column('#0', width=95, anchor=tk.W)
         self.inventory.column('Attack', width=5, anchor='center')
@@ -1263,12 +1497,12 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
         self.inventory.bind("<Double-Button-1>", self.on_inventory_double)
         self.inventory_updated()
 
-        self.style.configure("Treeview.Heading", font=self.master.gamefont)
-        self.style.configure("Treeview.Column", font=self.master.gamefont)
+        #self.style.configure("Treeview.Heading", font=self.master.gamefont)
+        #self.style.configure("Treeview.Column", font=self.master.gamefont)
 
     def create_spell_tab(self):
-        self.spellinventoryFrame = ttk.Frame(self.charinfo)
-        self.learnedspells = ttk.Treeview(self.spellinventoryFrame, selectmode='browse')
+        self.spellinventoryFrame = ttk.Frame(self.charinfo,style="Custom.TFrame")
+        self.learnedspells = ttk.Treeview(self.spellinventoryFrame, selectmode='browse',style="Custom.Treeview")
         self.learnedspells['columns'] = ('one', 'two', 'three', 'four')
         self.learnedspells.column('#0', width=95, anchor=tk.W)
         self.learnedspells.column('one', width=3, anchor='center')
@@ -1286,7 +1520,7 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
         self.spells_updated()
 
     def create_options_tab(self):
-        self.optionsmenu = ttk.Frame(self.charinfo)
+        self.optionsmenu = ttk.Frame(self.charinfo,style="Custom.TFrame")
 
         def get_fg_color():
             color = colorchooser.askcolor(title='Foreground Color')
@@ -1302,16 +1536,16 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
         tk.Button(self.optionsmenu, text='choose FG color', command=get_fg_color).pack()
         tk.Button(self.optionsmenu, text='Save Game', command = lambda:self.save_game_state()).pack()
 
-        self.helpmenu = ttk.Frame(self.charinfo)
-        tk.Label(self.helpmenu, text='Key', font=self.master.gamefont).pack()
+        self.helpmenu = ttk.Frame(self.charinfo,style="Custom.TFrame")
+        ttk.Label(self.helpmenu, text='Key',style="Custom.TLabel").pack()
         keystring = f'''{CHAR_DICT['*']} = Player\n{CHAR_DICT['#']} = Wall\n{CHAR_DICT['d']} = Door\n{CHAR_DICT['m']} = Monster\n{CHAR_DICT['g']} = Gold\n{CHAR_DICT['c']} = Chest\n{CHAR_DICT['.']} = Entrance\n{CHAR_DICT['!']} = Exit'''
-        tk.Label(self.helpmenu, text=keystring, font=self.master.gamefont, justify=tk.LEFT).pack()
+        ttk.Label(self.helpmenu, text=keystring,style="Custom.TLabel",justify=tk.LEFT).pack()
 
     def save_game_state(self):
         pass
 
     def create_map_tab(self):
-        self.mapmenu = ttk.Frame(self.charinfo)
+        self.mapmenu = ttk.Frame(self.charinfo,style="Custom.TFrame")
         self.tower = TowerMap(self.mapmenu)
         self.tower.pack()
 
@@ -1399,9 +1633,9 @@ class CharInfo(tk.Frame):  # Incomplete 300x700
         self.messages.insert('end-1c', message + '\n')
 
 
-class Visual_Board(tk.Frame):  # Incomplete 500x700
+class Visual_Board(ttk.Frame):  # Incomplete 500x700
     def __init__(self, master, color='#00ff00', fill='black', **args):
-        tk.Frame.__init__(self, master, width=700, height=555, **args)  # ,width=500,height=700,bg='black'
+        ttk.Frame.__init__(self, master, width=700, height=555, **args)  # ,width=500,height=700,bg='black'
         self.master = master
         self.board_fill = fill
         self.board_color = color
@@ -1481,13 +1715,16 @@ if __name__ == "__main__":
     if not os.path.isdir('saves'):
         os.makedirs('saves') 
     root = tk.Tk()
-    root.eval("tk::PlaceWindow %s center" % root.winfo_pathname(root.winfo_id()))
+    try:
+        root.eval("tk::PlaceWindow %s center" % root.winfo_pathname(root.winfo_id()))
+    except:
+        pass
     # root.geometry('250x250')
-    root.resizable(1, 1)
+    root.resizable(0, 0)
     root.title("")
     center(root)
     app = Base_Window(root)
-    # app =tester(root)
+    #app =tester(root)
 
     app.mainloop()
 
