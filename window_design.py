@@ -494,7 +494,7 @@ class Base_Window(ttk.Frame):
         self.cc.pack()
 
     def finish_character_create(self):
-        self.master.geometry('1135x555')
+        self.master.geometry('1245x555')#1135x555
         self.istutorial = True if self.cc.tutorial_enabled.get() == 1 else False
         self.cc.pack_forget()
         self.cc = None
@@ -1154,18 +1154,18 @@ class ShopUi(tk.Frame):  # (parent,playerobj,shopobj) - fix shop, remove titles 
             tw.destroy()
 
 
-class Portrait(tk.Frame):  # (parent)
+class Portrait(ttk.Frame):  # (parent)
     def __init__(self, master, **args):
-        tk.Frame.__init__(self, master, **args)
+        ttk.Frame.__init__(self, master, **args)
         self.master = master.master.master.master.master
-        self.canvas = tk.Canvas(self, width=420, height=250)
+        self.canvas = tk.Canvas(self, width=537, height=250,background="darkgrey",bd=0,highlightthickness=0)#width=420
         # self.player_obj=player_obj
         # self.main_window=main_window
         try:
             if os.path.exists('./src/custom.gif'):
-                self.bg_img = ImageTk.PhotoImage(Image.open('./src/custom.gif').resize((420, 250)))
+                self.bg_img = ImageTk.PhotoImage(Image.open('./src/custom.gif').resize((535, 250)))
             else:
-                self.bg_img = ImageTk.PhotoImage(Image.open('./src/basic.gif').resize((420,250)))
+                self.bg_img = ImageTk.PhotoImage(Image.open('./src/basic.gif').resize((535,250)))
             self.canvas.create_image(0, 0, anchor='nw', image=self.bg_img)
         except Exception as e:
             print(e)
@@ -1308,7 +1308,7 @@ class TowerMap(tk.Frame):  # (parent) - Incomplete TODO
         # self.master=master
         self.bg = bg
         self.fg = fg
-        self.canvas = tk.Canvas(self, width=420, height=250, bg=self.bg)
+        self.canvas = tk.Canvas(self, width=530, height=250, bg=self.bg,bd=0,highlightthickness=0)
         self.vbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.vbar.config(command=self.canvas.yview)
@@ -1398,26 +1398,27 @@ class ToolTip():
 
 
 class CharInfo(ttk.Frame):  # Incomplete 300x700
-    def __init__(self, master, height=500, width=420, **args):
-        ttk.Frame.__init__(self, master, **args)
+    def __init__(self, master, height=500,width=800, **args):#, width=420, **args):
+        ttk.Frame.__init__(self, master,style="Custom.TFrame", **args)
         self.master = master
+        
         self.reorder_img=tk.PhotoImage("Reorder",data='''
             iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARn
             QU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAfSURBVChTYwCB/1AA5gAB
             lAvmM4FFKAZQEwepFQwMAMHdL9dr8a1oAAAAAElFTkSuQmCC
         ''')
-        self.charInfoFrame = ttk.Frame(self, height=height // 2, width=420,style="Custom.TFrame")
+        self.charInfoFrame = ttk.Frame(self, height=height // 2, width=500,style="Custom.TFrame")#width=420
         self.charInfoFrame.pack(side=tk.TOP)
 
-        self.msgLogFrame = ttk.Frame(self, height=height // 2, width=420,style="Custom.TFrame")
-        self.msgLogFrame.pack(side=tk.BOTTOM)
+        self.msgLogFrame = ttk.Frame(self, height=height // 2, width=500,style="Custom.TFrame")#width=420
+        self.msgLogFrame.pack(side=tk.BOTTOM,expand=1,fill=tk.X)
 
-        self.charinfo = ReorderNotebook(self.charInfoFrame, height=height // 2, width=420,style="Custom.TNotebook")
+        self.charinfo = ReorderNotebook(self.charInfoFrame, height=height // 2, width=500,style="Custom.TNotebook")#width=420
         
         self.insert_tabs()
         self.charinfo.pack()
 
-        self.messages = tk.Text(self.msgLogFrame, height=15, width=47, exportselection=0, font=self.master.gamefont,bg="black",fg="white",insertbackground='white')
+        self.messages = tk.Text(self.msgLogFrame, height=15, width=59, exportselection=0, font=self.master.gamefont,bg="black",fg="white",insertbackground='white')
         self.messages.insert('end-1c', 'Game Started\n')
         self.messages.bind("<Key>", lambda e: "break")
         self.messages.bind("<Button-1>", lambda e: "break")
@@ -1492,7 +1493,7 @@ class CharInfo(ttk.Frame):  # Incomplete 300x700
         self.inventory.heading('Attack', text='Att', sort_by='name')
         self.inventory.heading('Defense', text='Def', sort_by='name')
         self.inventory.heading('Health', text='Recovers', sort_by='name')
-        self.inventory.pack(side=tk.TOP, fill=tk.BOTH)
+        self.inventory.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
         self.inventory.bind("<Button-1>", self.no_resize)
         self.inventory.bind("<Double-Button-1>", self.on_inventory_double)
         self.inventory_updated()
@@ -1635,11 +1636,11 @@ class CharInfo(ttk.Frame):  # Incomplete 300x700
 
 class Visual_Board(ttk.Frame):  # Incomplete 500x700
     def __init__(self, master, color='#00ff00', fill='black', **args):
-        ttk.Frame.__init__(self, master, width=700, height=555, **args)  # ,width=500,height=700,bg='black'
+        ttk.Frame.__init__(self, master, width=700, height=555,style="Custom.TFrame", **args)  # ,width=500,height=700,bg='black'
         self.master = master
         self.board_fill = fill
         self.board_color = color
-        self.canvas = tk.Canvas(self, width=700, height=555, bg=fill)
+        self.canvas = tk.Canvas(self, width=700, height=555, bg=fill,bd=0,highlightthickness=0)
         self.canvas.pack()
         self.canvas_items = {}
         self.init_floor()
